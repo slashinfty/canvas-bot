@@ -348,12 +348,14 @@ discord.setInterval(async () => {
                 .setTimestamp();
             await sendDiscord(testEmbed, course.id);
         }
+    }
 
-        // Get recent mentions
-        const recentMentionsResponse = await fetch("https://api.twitter.com/2/tweets/search/recent?query=%40" + config.twitter.handle + "&tweet.fields=created_at,in_reply_to_user_id&expansions=author_id", twitterGetInit);
-        const recentMentionsObject = await recentMentionsResponse.json();
-        const fiveMinutesAgo = new Date(Date.now() - 3e5);
-        // Go through mentions and tweet replies
+    // Get recent mentions
+    const recentMentionsResponse = await fetch("https://api.twitter.com/2/tweets/search/recent?query=%40" + config.twitter.handle + "&tweet.fields=created_at,in_reply_to_user_id&expansions=author_id", twitterGetInit);
+    const recentMentionsObject = await recentMentionsResponse.json();
+    const fiveMinutesAgo = new Date(Date.now() - 3e5);
+    // Go through mentions and tweet replies
+    if (recentMentionsObject.hasOwnProperty('data')) {
         for (let j = 0; j < recentMentionsObject.data.length; j++) {
             const thisTweet = recentMentionsObject.data[j];
             // Stop when a tweet is over 5 minutes old
@@ -364,16 +366,24 @@ discord.setInterval(async () => {
             // Determine which class is mentioned
             let course = config.canvas.courses.find(c => thisTweet.text.search(new RegExp('(' + c.name + '|' + c.nick + ')', 'i')) > -1);
             // Determine if we're looking for an announcement or assignment
-            let objectToTweet;
-            if (thisTweet.text.search(/(announcement|news)/i) > -1) objectToTweet = announcements[course.id][0];
-            else if (thisTweet.text.search(/(homework|hw)/i) > -1) objectToTweet = assignments[course.id].homework.length === 0 ? {} : assignments[course.id].homework[0];
-            else if (thisTweet.text.search(/(test|exam|quiz|tests|exams|quizzes)/i) > -1) objectToTweet = assignments[course.id].tests.length === 0 ? {} : assignments[course.id].tests[0];
+            let objectToTweet, missingItem;
+            if (thisTweet.text.search(/(announcement|news)/i) > -1) {
+                objectToTweet = announcements[course.id][0];
+                missingItem = 'No recent announcement.';
+            } else if (thisTweet.text.search(/(homework|hw)/i) > -1) {
+                objectToTweet = assignments[course.id].homework.length === 0 ? {} : assignments[course.id].homework[0];
+                missingItem = 'No upcoming homework.';
+            } else if (thisTweet.text.search(/(test|exam|quiz|tests|exams|quizzes)/i) > -1) {
+                objectToTweet = assignments[course.id].tests.length === 0 ? {} : assignments[course.id].tests[0];
+                missingItem = 'No upcoming tests.';
+            }
             // If announcement or assignment is not mentioned, skip
-            if (objectToTweet === undefined || objectToTweet === {}) continue;
+            if (objectToTweet === undefined) continue;
             // Constructing the reply and tweeting
             const date = thisTweet.text.search(/(homework|hw)/i) > -1 ? 'Due Date: ' + objectToTweet.due_date : thisTweet.text.search(/(announcement|news)/i) > -1 ? objectToTweet.date : 'Date: ' + objectToTweet.due_date;
             const sender = recentMentionsObject.includes.users.find(u => u.id === thisTweet.author_id).username;
-            const tweetContent = '@' + sender + ' ' + objectToTweet.title + ' (' + date + ') ' + objectToTweet.link;
+            let tweetContent = '@' + sender + ' '; 
+            tweetContent += (Object.keys(objectToTweet).length === 0 && objectToTweet.constructor === Object) ? missingItem : objectToTweet.title + ' (' + date + ') ' + objectToTweet.link;
             await sendTwitter(tweetContent, thisTweet.id);
         }
     }
