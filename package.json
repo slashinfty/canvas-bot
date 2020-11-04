@@ -10,6 +10,7 @@
     "discord.js": "^12.4.1",
     "node-fetch": "^2.6.1",
     "oauth-signature": "^1.5.0",
-    "randomstring": "^1.1.5"
+    "randomstring": "^1.1.5",
+    "twitter": "^1.7.1"
   }
 }
