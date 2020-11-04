@@ -1,0 +1,15 @@
+{
+  "name": "canvas-bot",
+  "version": "1.0.0",
+  "description": "Discord and Twitter bot querying Canvas",
+  "main": "index.js",
+  "repository": "git@github.com:slashinfty/canvas-bot.git",
+  "author": "Matt Braddock <matt.braddock@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.4.1",
+    "node-fetch": "^2.6.1",
+    "oauth-signature": "^1.5.0",
+    "randomstring": "^1.1.5"
+  }
+}
