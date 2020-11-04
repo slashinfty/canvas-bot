@@ -279,6 +279,13 @@ discord.on('message', async message => {
     }
 });
 
+// Remove servers if the bot is removed from the server
+discord.on('guildDelete', guild => {
+    const server = servers.filter(s => s.server === guild.id);
+    server.forEach(s => servers.splice(servers.indexOf(s), 1));
+    serverUpdate();
+});
+
 // Checks to run every 5 minutes
 discord.setInterval(async () => {
     for (let i = 0; i < config.canvas.courses.length; i++) {

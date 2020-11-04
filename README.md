@@ -1,13 +1,11 @@
 A Discord & Twitter bot that monitors and retrieves data from the Canvas LMS.
 
-## Matt Braddock's Instance
+## Students
 
-You can [invite](https://discordapp.com/oauth2/authorize?client_id=732949844540522546&scope=bot) the Discord bot and [view](https://twitter.com/braddock_canvas) the Twitter bot.
+You can [invite](https://discordapp.com/oauth2/authorize?client_id=732949844540522546&scope=bot) Mr. Braddock's Discord bot and [view](https://twitter.com/braddock_canvas) the Twitter bot.
 
-## Help Document
+Click [here](help.md) if you need help.
 
-General help is available [here](help.md).
+## Teachers
 
-## Setup Document
-
-Interested in creating your own instance? Help is available [here](setup.md).
+Interested in creating your own instance? A guide is available [here](setup.md). You can also browse the [source code](https://github.com/slashinfty/canvas-bot).
