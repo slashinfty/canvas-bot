@@ -308,7 +308,8 @@ discord.setInterval(async () => {
                 .addField('Posted:', newAnnouncement.date)
                 .addField('Announcement:', announcementMessage)
                 .setTimestamp();
-            await sendDiscord(announcementEmbed, course.id);
+            await sendDiscord(announcementEmbed, thisCourse.id);
+            announcements[thisCourse.id] = [newAnnouncement];
         }
 
         // Check for new homework
@@ -327,7 +328,8 @@ discord.setInterval(async () => {
                 .addField('Start Date:', homework.start_date)
                 .addField('Due Date:', homework.due_date)
                 .setTimestamp();
-            await sendDiscord(homeworkEmbed, course.id);
+            await sendDiscord(homeworkEmbed, thisCourse.id);
+            assignments[thisCourse.id].homework.push(homework);
         }
 
         // Check for new tests
@@ -346,7 +348,8 @@ discord.setInterval(async () => {
                 .addField('Start Date:', test.start_date)
                 .addField('Due Date:', test.due_date)
                 .setTimestamp();
-            await sendDiscord(testEmbed, course.id);
+            await sendDiscord(testEmbed, thisCourse.id);
+            assignments[thisCourse.id].tests.push(test);
         }
     }
 
